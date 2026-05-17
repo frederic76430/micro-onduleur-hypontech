@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="brand/logo.png" alt="Micro Onduleur Hypontech" width="200"/>
+</p>
+
 # Micro Onduleur Hypontech 🌞
 
 [![hacs_badge](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/hacs/integration)
