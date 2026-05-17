@@ -9,7 +9,7 @@ Inclut toutes les données globales **plus** le suivi par panneau individuel.
 ## Installation via HACS
 
 1. Dans HACS → cliquez sur ⋮ → **Dépôts personnalisés**
-2. Ajoutez : `https://github.com/martelfrederic78/micro-onduleur-hypontech`
+2. Ajoutez : `https://github.com/frederic76430/micro-onduleur-hypontech`
 3. Type : **Intégration**
 4. Cherchez **"Micro Onduleur Hypontech"** et installez
 5. Redémarrez Home Assistant
