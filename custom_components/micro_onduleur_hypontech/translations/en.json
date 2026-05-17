@@ -1,0 +1,30 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Micro Onduleur Hypontech",
+        "description": "Sign in with your **hypon.cloud** account",
+        "data": {
+          "username": "Email address",
+          "password": "Password"
+        }
+      },
+      "plant": {
+        "title": "Choose your installation",
+        "description": "Multiple installations found, please choose one",
+        "data": {
+          "plant_id": "Solar installation"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Invalid email or password",
+      "no_plants": "No installations found on this account",
+      "cannot_connect": "Cannot connect to hypon.cloud"
+    },
+    "abort": {
+      "already_configured": "This installation is already configured",
+      "no_layout": "No layout found, please check your installation on hypon.cloud"
+    }
+  }
+}
