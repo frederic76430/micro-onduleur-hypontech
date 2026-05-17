@@ -127,17 +127,47 @@ class MicroOnduleurHypontechAPI:
 
         return None
 
+    async def get_energy_month(self, plant_id: str) -> float:
+        """Récupérer la production du mois en cours (endpoint dédié).
+
+        L'endpoint /monitor retourne une valeur incorrecte pour e_month,
+        on utilise donc /energy2?type=month qui retourne la vraie valeur.
+        """
+        today = date.today()
+        url = (
+            f"{BASE_URL}/plant/{plant_id}/energy2"
+            f"?type=month&month={today.month:02d}&year={today.year}"
+        )
+        result = await self._get(url)
+        if not result:
+            return 0.0
+        return result.get("data", {}).get("pvkwh", 0.0)
+
+    async def get_energy_year(self, plant_id: str) -> float:
+        """Récupérer la production de l'année en cours (endpoint dédié)."""
+        today = date.today()
+        url = (
+            f"{BASE_URL}/plant/{plant_id}/energy2"
+            f"?type=year&year={today.year}"
+        )
+        result = await self._get(url)
+        if not result:
+            return 0.0
+        return result.get("data", {}).get("pvkwh", 0.0)
+
     async def get_all_data(self, plant_id: str, layout_id: str) -> dict:
         """Récupérer toutes les données en une fois."""
         monitor = await self.get_monitor_data(plant_id) or {}
         panel = await self.get_panel_data(plant_id, layout_id) or {}
+        e_month = await self.get_energy_month(plant_id)
+        e_year = await self.get_energy_year(plant_id)
 
         return {
             # Données globales
             "e_today": monitor.get("e_today", 0.0),
             "e_total": monitor.get("e_total", 0.0),
-            "e_month": monitor.get("e_month", 0.0),
-            "e_year": monitor.get("e_year", 0.0),
+            "e_month": e_month,
+            "e_year": e_year,
             "power_pv": monitor.get("power_pv", 0.0),
             "power_load": monitor.get("power_load", 0.0),
             "meter_power": monitor.get("meter_power", 0.0),
