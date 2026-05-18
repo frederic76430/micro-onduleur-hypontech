@@ -101,4 +101,3 @@ class MicroOnduleurHypontechSensor(CoordinatorEntity, SensorEntity):
             return round(float(value), self._precision)
         except (ValueError, TypeError):
             return None
-
