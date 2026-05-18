@@ -1,7 +1,7 @@
 {
   "domain": "micro_onduleur_hypontech",
   "name": "Micro Onduleur Hypontech",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "documentation": "https://github.com/frederic76430/micro-onduleur-hypontech",
   "issue_tracker": "https://github.com/frederic76430/micro-onduleur-hypontech/issues",
   "requirements": ["aiohttp>=3.9.0"],
