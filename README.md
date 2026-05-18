@@ -18,7 +18,10 @@ Inclut toutes les données globales **plus** le suivi par panneau individuel.
 - 🔋 Détection automatique de la **batterie**
 - ⚡ Détection automatique des **onduleurs 4 entrées**
 - 🌙 Gestion intelligente **nuit/jour** — pas d'appel API inutile la nuit
-- 🔄 Mise à jour toutes les **5 minutes** (30 minutes la nuit)
+- 🔄 Mise à jour toutes les **60 secondes** (30 minutes la nuit)
+- 📅 Production mois/année mise à jour **1 fois par heure**
+- 🔑 **Réauthentification automatique** si le mot de passe change
+- 🛡️ Conservation des dernières données en cas d'erreur API
 
 ## Installation via HACS
 
@@ -34,7 +37,7 @@ Inclut toutes les données globales **plus** le suivi par panneau individuel.
 
 ### 📊 Données globales
 | Capteur | Unité | Activé par défaut |
-|---------|-------|-------------------|
+|---------|-------|:-----------------:|
 | Production aujourd'hui | kWh | ✅ |
 | Production totale | kWh | ✅ |
 | Production ce mois | kWh | ✅ |
@@ -49,7 +52,7 @@ Inclut toutes les données globales **plus** le suivi par panneau individuel.
 
 ### 🔲 Données par panneau
 | Capteur | Unité | Activé par défaut |
-|---------|-------|-------------------|
+|---------|-------|:-----------------:|
 | Panneau 1 - Puissance | W | ✅ |
 | Panneau 1 - Tension | V | ✅ |
 | Panneau 1 - Courant | A | ✅ |
@@ -69,9 +72,32 @@ Inclut toutes les données globales **plus** le suivi par panneau individuel.
 
 > 🔋 **auto** = activé automatiquement si une batterie est détectée
 > ⚡ **auto** = activé automatiquement si un onduleur 4 entrées est détecté
+> ❌ = désactivé par défaut, activable manuellement
 
 ## Compatibilité
 - Testé avec : **Hypontech HMS-800W-C**
 - Cloud : **hypon.cloud**
-- Mise à jour : toutes les **5 minutes** (30 min la nuit)
+- Mise à jour : toutes les **60 secondes** (30 min la nuit)
 - Home Assistant : **2024.1.0** minimum
+
+## Historique des versions
+
+### v1.0.8
+- Architecture améliorée — classe de base `entity.py`
+- Logger centralisé dans `const.py`
+- Réauthentification automatique si mot de passe change
+- Gestion des erreurs inconnues
+
+### v1.0.6
+- Mise à jour toutes les 60 secondes (au lieu de 5 minutes)
+- Production mois/année mise à jour 1 fois par heure seulement
+- Gestion intelligente nuit/jour
+
+### v1.0.5
+- Détection automatique batterie
+- Détection automatique onduleur 4 entrées (pv3/pv4)
+- "Consommation maison" renommé en "Production instantanée"
+
+### v1.0.1
+- Correction production ce mois
+- Correction production cette année
