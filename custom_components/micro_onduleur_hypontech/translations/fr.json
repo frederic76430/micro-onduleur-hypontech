@@ -26,5 +26,10 @@
       "already_configured": "Cette installation est déjà configurée",
       "no_layout": "Aucun agencement trouvé, vérifiez votre installation sur hypon.cloud"
     }
+  },
+  "exceptions": {
+    "connection_error": {
+      "message": "Impossible de se connecter à hypon.cloud"
+    }
   }
 }
