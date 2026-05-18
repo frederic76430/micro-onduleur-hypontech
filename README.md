@@ -6,7 +6,7 @@
 
 [![hacs_badge](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/hacs/integration)
 
-Intégration Home Assistant complète pour les micro-onduleurs **Hypontech HMS-800W-C**.
+Intégration Home Assistant complète pour les micro-onduleurs **Hypontech **.
 
 Inclut toutes les données globales **plus** le suivi par panneau individuel.
 
