@@ -26,5 +26,10 @@
       "already_configured": "This installation is already configured",
       "no_layout": "No layout found, please check your installation on hypon.cloud"
     }
+  },
+  "exceptions": {
+    "connection_error": {
+      "message": "Cannot connect to hypon.cloud"
+    }
   }
 }
