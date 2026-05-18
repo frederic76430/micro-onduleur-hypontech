@@ -18,10 +18,10 @@ from homeassistant.const import (
 )
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
-from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .const import DOMAIN
 from .coordinator import MicroOnduleurHypontechCoordinator
+from .entity import MicroOnduleurEntity
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -110,12 +110,24 @@ async def async_setup_entry(
     async_add_entities(entities)
 
 
-class MicroOnduleurHypontechSensor(CoordinatorEntity, SensorEntity):
+class MicroOnduleurHypontechSensor(MicroOnduleurEntity, SensorEntity):
     """Capteur Micro Onduleur Hypontech."""
 
-    def __init__(self, coordinator, entry, key, name, unit, device_class, state_class, icon, precision, enabled_default):
+    def __init__(
+        self,
+        coordinator: MicroOnduleurHypontechCoordinator,
+        entry: ConfigEntry,
+        key: str,
+        name: str,
+        unit: str,
+        device_class,
+        state_class,
+        icon: str,
+        precision: int,
+        enabled_default: bool,
+    ) -> None:
         """Initialiser."""
-        super().__init__(coordinator)
+        super().__init__(coordinator, entry.entry_id, entry.title)
         self._key = key
         self._precision = precision
         self._attr_name = name
@@ -125,13 +137,6 @@ class MicroOnduleurHypontechSensor(CoordinatorEntity, SensorEntity):
         self._attr_state_class = state_class
         self._attr_icon = icon
         self._attr_entity_registry_enabled_default = enabled_default
-        self._attr_device_info = {
-            "identifiers": {(DOMAIN, entry.entry_id)},
-            "name": entry.title,
-            "manufacturer": "Hypontech",
-            "model": "HMS-800W-C",
-            "configuration_url": "https://www.hypon.cloud",
-        }
 
     @property
     def native_value(self):
