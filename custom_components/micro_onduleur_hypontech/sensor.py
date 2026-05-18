@@ -25,15 +25,21 @@ from .coordinator import MicroOnduleurHypontechCoordinator
 
 _LOGGER = logging.getLogger(__name__)
 
+# Capteurs pv3/pv4 — désactivés par défaut, activés auto si onduleur 4 entrées
+PV34_KEYS = {"pv3power", "pv3v", "pv3a", "pv4power", "pv4v", "pv4a"}
+
+# Capteurs batterie — désactivés par défaut, activés auto si batterie détectée
+BATTERY_KEYS = {"soc", "w_cha"}
+
 # (clé, nom, unité, device_class, state_class, icône, précision, activé_par_défaut)
 SENSORS = [
     # ── Données globales ─────────────────────────────────────────────────
-    ("power_pv",    "Puissance solaire",       UnitOfPower.WATT,              SensorDeviceClass.POWER,       SensorStateClass.MEASUREMENT,       "mdi:solar-power",          1, False),
+    ("power_pv",    "Puissance solaire",        UnitOfPower.WATT,              SensorDeviceClass.POWER,       SensorStateClass.MEASUREMENT,       "mdi:solar-power",          1, False),
     ("e_today",     "Production aujourd'hui",   UnitOfEnergy.KILO_WATT_HOUR,   SensorDeviceClass.ENERGY,      SensorStateClass.TOTAL_INCREASING,  "mdi:solar-power",          2, True),
     ("e_total",     "Production totale",        UnitOfEnergy.KILO_WATT_HOUR,   SensorDeviceClass.ENERGY,      SensorStateClass.TOTAL_INCREASING,  "mdi:counter",              2, True),
     ("e_month",     "Production ce mois",       UnitOfEnergy.KILO_WATT_HOUR,   SensorDeviceClass.ENERGY,      SensorStateClass.TOTAL_INCREASING,  "mdi:calendar-month",       2, True),
     ("e_year",      "Production cette année",   UnitOfEnergy.KILO_WATT_HOUR,   SensorDeviceClass.ENERGY,      SensorStateClass.TOTAL_INCREASING,  "mdi:calendar",             2, True),
-    ("power_load",  "Production instantanée",    UnitOfPower.WATT,              SensorDeviceClass.POWER,       SensorStateClass.MEASUREMENT,       "mdi:solar-power-variant",  1, True),
+    ("power_load",  "Production instantanée",   UnitOfPower.WATT,              SensorDeviceClass.POWER,       SensorStateClass.MEASUREMENT,       "mdi:solar-power-variant",  1, True),
     ("meter_power", "Puissance réseau",         UnitOfPower.WATT,              SensorDeviceClass.POWER,       SensorStateClass.MEASUREMENT,       "mdi:transmission-tower",   1, False),
     ("w_cha",       "Puissance batterie",       UnitOfPower.WATT,              SensorDeviceClass.POWER,       SensorStateClass.MEASUREMENT,       "mdi:battery-charging",     1, False),
     ("soc",         "Batterie",                 "%",                           SensorDeviceClass.BATTERY,     SensorStateClass.MEASUREMENT,       "mdi:battery",              0, False),
@@ -46,6 +52,13 @@ SENSORS = [
     ("pv2power",    "Panneau 2 - Puissance",    UnitOfPower.WATT,              SensorDeviceClass.POWER,       SensorStateClass.MEASUREMENT,       "mdi:solar-panel",          1, True),
     ("pv2v",        "Panneau 2 - Tension",      UnitOfElectricPotential.VOLT,  SensorDeviceClass.VOLTAGE,     SensorStateClass.MEASUREMENT,       "mdi:solar-panel",          1, True),
     ("pv2a",        "Panneau 2 - Courant",      UnitOfElectricCurrent.AMPERE,  SensorDeviceClass.CURRENT,     SensorStateClass.MEASUREMENT,       "mdi:solar-panel",          2, True),
+    # pv3/pv4 — désactivés par défaut, activés auto si onduleur 4 entrées
+    ("pv3power",    "Panneau 3 - Puissance",    UnitOfPower.WATT,              SensorDeviceClass.POWER,       SensorStateClass.MEASUREMENT,       "mdi:solar-panel",          1, False),
+    ("pv3v",        "Panneau 3 - Tension",      UnitOfElectricPotential.VOLT,  SensorDeviceClass.VOLTAGE,     SensorStateClass.MEASUREMENT,       "mdi:solar-panel",          1, False),
+    ("pv3a",        "Panneau 3 - Courant",      UnitOfElectricCurrent.AMPERE,  SensorDeviceClass.CURRENT,     SensorStateClass.MEASUREMENT,       "mdi:solar-panel",          2, False),
+    ("pv4power",    "Panneau 4 - Puissance",    UnitOfPower.WATT,              SensorDeviceClass.POWER,       SensorStateClass.MEASUREMENT,       "mdi:solar-panel",          1, False),
+    ("pv4v",        "Panneau 4 - Tension",      UnitOfElectricPotential.VOLT,  SensorDeviceClass.VOLTAGE,     SensorStateClass.MEASUREMENT,       "mdi:solar-panel",          1, False),
+    ("pv4a",        "Panneau 4 - Courant",      UnitOfElectricCurrent.AMPERE,  SensorDeviceClass.CURRENT,     SensorStateClass.MEASUREMENT,       "mdi:solar-panel",          2, False),
     ("pvtotal",     "Puissance totale DC",      UnitOfPower.WATT,              SensorDeviceClass.POWER,       SensorStateClass.MEASUREMENT,       "mdi:flash",                1, False),
     ("phvpha",      "Tension AC réseau",        UnitOfElectricPotential.VOLT,  SensorDeviceClass.VOLTAGE,     SensorStateClass.MEASUREMENT,       "mdi:sine-wave",            1, True),
     ("hz",          "Fréquence réseau",         UnitOfFrequency.HERTZ,         SensorDeviceClass.FREQUENCY,   SensorStateClass.MEASUREMENT,       "mdi:sine-wave",            2, True),
@@ -60,10 +73,41 @@ async def async_setup_entry(
 ) -> None:
     """Configurer tous les capteurs."""
     coordinator: MicroOnduleurHypontechCoordinator = hass.data[DOMAIN][entry.entry_id]
-    async_add_entities([
-        MicroOnduleurHypontechSensor(coordinator, entry, *sensor)
-        for sensor in SENSORS
-    ])
+
+    data = coordinator.data or {}
+
+    # Détecter onduleur 4 entrées
+    has_pv34 = (
+        float(data.get("pv3power", 0)) > 0 or
+        float(data.get("pv3v", 0)) > 0 or
+        float(data.get("pv4power", 0)) > 0 or
+        float(data.get("pv4v", 0)) > 0
+    )
+
+    # Détecter batterie
+    has_battery = (
+        float(data.get("soc", 0)) > 0 or
+        float(data.get("w_cha", 0)) > 0
+    )
+
+    if has_pv34:
+        _LOGGER.info("Onduleur 4 entrées détecté — activation des capteurs pv3/pv4")
+    if has_battery:
+        _LOGGER.info("Batterie détectée — activation des capteurs batterie")
+
+    entities = []
+    for sensor in SENSORS:
+        key = sensor[0]
+        enabled = sensor[7]
+        if key in PV34_KEYS and has_pv34:
+            enabled = True
+        if key in BATTERY_KEYS and has_battery:
+            enabled = True
+        entities.append(
+            MicroOnduleurHypontechSensor(coordinator, entry, *sensor[:7], enabled)
+        )
+
+    async_add_entities(entities)
 
 
 class MicroOnduleurHypontechSensor(CoordinatorEntity, SensorEntity):
