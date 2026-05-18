@@ -33,7 +33,7 @@ SENSORS = [
     ("e_total",     "Production totale",        UnitOfEnergy.KILO_WATT_HOUR,   SensorDeviceClass.ENERGY,      SensorStateClass.TOTAL_INCREASING,  "mdi:counter",              2, True),
     ("e_month",     "Production ce mois",       UnitOfEnergy.KILO_WATT_HOUR,   SensorDeviceClass.ENERGY,      SensorStateClass.TOTAL_INCREASING,  "mdi:calendar-month",       2, True),
     ("e_year",      "Production cette année",   UnitOfEnergy.KILO_WATT_HOUR,   SensorDeviceClass.ENERGY,      SensorStateClass.TOTAL_INCREASING,  "mdi:calendar",             2, True),
-    ("power_load",  "Consommation maison",      UnitOfPower.WATT,              SensorDeviceClass.POWER,       SensorStateClass.MEASUREMENT,       "mdi:home-lightning-bolt",  1, False),
+    ("power_load",  "Production instantanée",    UnitOfPower.WATT,              SensorDeviceClass.POWER,       SensorStateClass.MEASUREMENT,       "mdi:solar-power-variant",  1, True),
     ("meter_power", "Puissance réseau",         UnitOfPower.WATT,              SensorDeviceClass.POWER,       SensorStateClass.MEASUREMENT,       "mdi:transmission-tower",   1, False),
     ("w_cha",       "Puissance batterie",       UnitOfPower.WATT,              SensorDeviceClass.POWER,       SensorStateClass.MEASUREMENT,       "mdi:battery-charging",     1, False),
     ("soc",         "Batterie",                 "%",                           SensorDeviceClass.BATTERY,     SensorStateClass.MEASUREMENT,       "mdi:battery",              0, False),
