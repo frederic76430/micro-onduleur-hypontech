@@ -3,7 +3,7 @@
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from .const import DOMAIN
+from .const import DOMAIN, LOGGER
 from .coordinator import MicroOnduleurHypontechCoordinator
 
 

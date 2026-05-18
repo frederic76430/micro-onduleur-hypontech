@@ -1,12 +1,12 @@
 """API client for Micro Onduleur Hypontech."""
 
-import logging
 from datetime import date
 from time import time
 
 import aiohttp
 
-_LOGGER = logging.getLogger(__name__)
+from .const import LOGGER
+_LOGGER = LOGGER
 
 BASE_URL = "https://api.hypon.cloud/v2"
 TOKEN_VALIDITY = 3600
@@ -182,6 +182,12 @@ class MicroOnduleurHypontechAPI:
             "pv2power": panel.get("pv2power", 0.0),
             "pv2v": panel.get("pv2v", 0.0),
             "pv2a": panel.get("pv2a", 0.0),
+            "pv3power": panel.get("pv3power", 0.0),
+            "pv3v": panel.get("pv3v", 0.0),
+            "pv3a": panel.get("pv3a", 0.0),
+            "pv4power": panel.get("pv4power", 0.0),
+            "pv4v": panel.get("pv4v", 0.0),
+            "pv4a": panel.get("pv4a", 0.0),
             "pvtotal": panel.get("pvtotal", 0.0),
             "phvpha": panel.get("phvpha", 0.0),
             "hz": panel.get("hz", 0.0),

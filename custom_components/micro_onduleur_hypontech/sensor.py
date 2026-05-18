@@ -1,6 +1,5 @@
 """Capteurs Micro Onduleur Hypontech."""
 
-import logging
 
 from homeassistant.components.sensor import (
     SensorDeviceClass,
@@ -23,7 +22,7 @@ from .const import DOMAIN
 from .coordinator import MicroOnduleurHypontechCoordinator
 from .entity import MicroOnduleurEntity
 
-_LOGGER = logging.getLogger(__name__)
+from .const import LOGGER as _LOGGER
 
 # Capteurs pv3/pv4 — désactivés par défaut, activés auto si onduleur 4 entrées
 PV34_KEYS = {"pv3power", "pv3v", "pv3a", "pv4power", "pv4v", "pv4a"}

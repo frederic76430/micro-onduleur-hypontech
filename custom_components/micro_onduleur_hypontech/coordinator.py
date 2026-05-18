@@ -1,6 +1,5 @@
 """Coordinator pour Micro Onduleur Hypontech."""
 
-import logging
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 
@@ -11,7 +10,8 @@ from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, Upda
 from .api import MicroOnduleurHypontechAPI
 from .const import DOMAIN
 
-_LOGGER = logging.getLogger(__name__)
+from .const import DOMAIN, LOGGER
+_LOGGER = LOGGER
 
 # Intervalles de mise à jour
 INTERVAL_DAY = timedelta(seconds=60)    # 1 minute en journée
