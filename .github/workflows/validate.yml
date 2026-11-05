@@ -1,3 +1,4 @@
+# Vérifications automatiques : format HACS, manifeste Home Assistant (hassfest) et tests
 name: Validate
 
 on:
@@ -11,10 +12,26 @@ permissions: {}
 
 jobs:
   validate-hacs:
-    runs-on: "ubuntu-latest"
+    runs-on: ubuntu-latest
     steps:
       - name: HACS validation
-        uses: "hacs/action@main"
+        uses: hacs/action@main
         with:
-          category: "integration"
-          ignore: "brands"
+          category: integration
+          ignore: brands
+
+  hassfest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: home-assistant/actions/hassfest@master
+
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: pip install -r requirements_test.txt
+      - run: pytest
